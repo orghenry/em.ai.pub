@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>D3.js Mind Map Example</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; padding: 20px; }
+    .node circle { fill: #69b3a2; cursor: pointer; }
+    .node text { font-size: 14px; }
+    .link { fill: none; stroke: #ccc; stroke-width: 2px; }
+  </style>
+</head>
+<body>
+  <h1>D3.js Mind Map Example</h1>
+  <svg width="960" height="600"></svg>
+
+  <!-- Load D3.js -->
+  <script src="https://d3js.org/d3.v6.min.js"></script>
+  <script>
+    const data = {
+      name: "Main Topic",
+      children: [
+        {
+          name: "Subtopic 1",
+          children: [
+            { name: "Detail 1.1" },
+            { name: "Detail 1.2" }
+          ]
+        },
+        {
+          name: "Subtopic 2",
+          children: [
+            {
+              name: "Detail 2.1",
+              children: [
+                { name: "Sub-detail 2.1.1" },
+                { name: "Sub-detail 2.1.2" }
+              ]
+            },
+            { name: "Detail 2.2" }
+          ]
+        },
+        {
+          name: "Subtopic 3",
+          children: [
+            { name: "Detail 3.1" },
+            { name: "Detail 3.2" }
+          ]
+        }
+      ]
+    };
+
+    const width = 960;
+    const height = 600;
+
+    const svg = d3.select("svg")
+                  .attr("width", width)
+                  .attr("height", height)
+                  .append("g")
+                  .attr("transform", "translate(50,50)");
+
+    const treeLayout = d3.tree().size([height - 100, width - 200]);
+    const root = d3.hierarchy(data);
+    treeLayout(root);
+
+    // Draw links (lines)
+    svg.selectAll('.link')
+       .data(root.links())
+       .enter()
+       .append('path')
+       .attr('class', 'link')
+       .attr('d', d3.linkHorizontal()
+                    .x(d => d.y)
+                    .y(d => d.x));
+
+    // Draw nodes (circles and text)
+    const node = svg.selectAll('.node')
+                    .data(root.descendants())
+                    .enter()
+                    .append('g')
+                    .attr('class', 'node')
+                    .attr('transform', d => `translate(${d.y},${d.x})`);
+
+    node.append('circle')
+        .attr('r', 8)
+        .on('click', (event, d) => {
+          // Toggle children on click
+          if (d.children) {
+            d._children = d.children;
+            d.children = null;
+          } else {
+            d.children = d._children;
+            d._children = null;
+          }
+          update(); // Update the visualization
+        });
+
+    node.append('text')
+        .attr('dy', 4)
+        .attr('x', d => d.children ? -12 : 12)
+        .style('text-anchor', d => d.children ? 'end' : 'start')
+        .text(d => d.data.name);
+
+    function update() {
+      const nodes = root.descendants();
+      const links = root.links();
+
+      // Update links
+      svg.selectAll('.link')
+         .data(links)
+         .join('path')
+         .attr('class', 'link')
+         .attr('d', d3.linkHorizontal()
+                      .x(d => d.y)
+                      .y(d => d.x));
+
+      // Update nodes
+      const nodeUpdate = svg.selectAll('.node')
+                            .data(nodes)
+                            .join('g')
+                            .attr('class', 'node')
+                            .attr('transform', d => `translate(${d.y},${d.x})`);
+
+      nodeUpdate.select('circle')
+                .attr('r', 8)
+                .on('click', (event, d) => {
+                  if (d.children) {
+                    d._children = d.children;
+                    d.children = null;
+                  } else {
+                    d.children = d._children;
+                    d._children = null;
+                  }
+                  update();
+                });
+
+      nodeUpdate.select('text')
+                .text(d => d.data.name);
+    }
+  </script>
+</body>
+</html>
