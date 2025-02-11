@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Post Data to Markmap</title>
+
+  <!-- <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Display the message from the URL query parameter
+      const params = new URLSearchParams(window.location.search);
+      const message = params.get('message');
+      document.getElementById('receivedMessage').innerText = message || 'No message received!';
+
+      // Form submission handler
+      document.getElementById('postForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+        
+        const markdownData = document.querySelector('textarea[name="data"]').value;
+        sessionStorage.setItem('markdownData', markdownData); // Store data in sessionStorage
+
+        // Redirect to markmap.html
+        window.location.href = 'markmap.html';
+      });
+    });
+  </script> -->
+  
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+
+      // Display the message from the URL query parameter
+      const params = new URLSearchParams(window.location.search);
+      const message = params.get('message');
+      document.getElementById('receivedMessage').innerText = (message ? message + '\n' : 'No message received!\n');
+
+      document.getElementById('postForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+  
+        const markdownData = document.querySelector('textarea[name="data"]').value;
+        sessionStorage.setItem('markdownData', markdownData); // Store data in sessionStorage
+  
+        // Redirect to markmap.html
+        window.location.href = 'marpmap.html';
+      });
+    });
+  </script>
+
+
+</head>
+<body>
+  <form id="postForm" method="POST" action="marpmap.html">
+    <textarea id="receivedMessage" name="data" rows="30" cols="100"></textarea>
+    <br>
+    <button type="submit">Send Data</button>
+  </form>
+</body>
+</html>
