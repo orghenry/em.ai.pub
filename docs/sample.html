@@ -4,43 +4,30 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Markmap Example</title>
-
-  <!-- Markmap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/markmap@0.6.1/style/view.mindmap.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/d3@6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/markmap-view"></script>
 </head>
 <body>
-  <h1>Markmap Mind Map Example</h1>
+  <textarea id="mm" style="display:none;">
+# Markmap Example
 
-  <!-- Mindmap container -->
-  <svg id="mindmap"></svg>
+## Features
+- Interactive mindmaps
+- Easy to use
+- Supports Markdown
 
-  <!-- Markmap JS -->
-<script src="
-https://cdn.jsdelivr.net/npm/markmap-lib@0.18.9/dist/browser/index.iife.min.js
-"></script>
-<script src="
-https://cdn.jsdelivr.net/npm/markmap-view@0.18.9/dist/browser/index.min.js
-"></script>
-  
+## Usage
+1. Write Markdown
+2. Visualize as a mindmap
+3. Share with others
+  </textarea>
+
+  <svg id="mindmap" style="width: 100%; height: 600px;"></svg>
+
   <script>
-    // Markdown content
-    const markdown = `
-# Main Topic
-## Subtopic 1
-- Detail 1.1
-- Detail 1.2
-## Subtopic 2
-- Detail 2.1
-  - Sub-detail 2.1.1
-  - Sub-detail 2.1.2
-- Detail 2.2
-## Subtopic 3
-- Detail 3.1
-- Detail 3.2
-    `;
-
-    // Initialize the mindmap
-    const mindmap = markmap.Markmap.create("#mindmap", null, markdown);
+    const markdown = document.getElementById("mm").value;
+    const data = markmap.transform(markdown);
+    markmap.Markmap.create("#mindmap", null, data);
   </script>
 </body>
 </html>
