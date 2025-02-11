@@ -22,12 +22,25 @@
 3. Share with others
   </textarea>
 
+
+  <!-- SVG container for the mindmap -->
   <svg id="mindmap" style="width: 100%; height: 600px;"></svg>
 
   <script>
+    // Get Markdown content from textarea
     const markdown = document.getElementById("mm").value;
-    const data = markmap.transform(markdown);
-    markmap.Markmap.create("#mindmap", null, data);
+
+    // Initialize a Transformer instance from markmap-lib
+    const transformer = new markmap.Transformer();
+
+    // Transform the Markdown into a tree structure
+    const { root } = transformer.transform(markdown);
+
+    // Select the SVG element where the mindmap will be rendered
+    const svg = document.querySelector("#mindmap");
+
+    // Create and render the Markmap using the transformed data
+    markmap.Markmap.create(svg, null, root);
   </script>
 </body>
 </html>
